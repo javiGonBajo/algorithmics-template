@@ -5,18 +5,21 @@ public class QuicksortInsertionTimes {
 
 	public static void main(String arg[]) {
 		long t1, t2;
-		int k = Integer.parseInt(arg[0]);
 		int n = 16000000;
-		v = new int[n];
+		int[] k = {0,5,10,20,30,50,100,200,500,1000};
+		
+		for(int i = 0; i<k.length; i+=1) {
+			v = new int[n];
 
-		Vector.randomSorted(v);
+			Vector.randomSorted(v);
+			
+			t1 = System.currentTimeMillis();
 
-		t1 = System.currentTimeMillis();
+			QuicksortInsertion.quicksortInsertion(v, i);
 
-		QuicksortInsertion.quicksortInsertion(v, k);
+			t2 = System.currentTimeMillis();
 
-		t2 = System.currentTimeMillis();
-
-		System.out.println(n + "\t" + (t2 - t1));
+			System.out.println(k[i] + "\t" + (t2 - t1));
+		}
 	}
 }
