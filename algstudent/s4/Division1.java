@@ -20,15 +20,15 @@ public class Division1 {
 	public static void main (String arg []) 
 	{
 		long t1,t2,cont = 0;
-		for (int n=1;n<=10000000;n*=2)
-		 {
-			 t1 = System.currentTimeMillis ();
-			
-			 cont=rec1(n);
-			 
-			 t2 = System.currentTimeMillis ();
-			
-			 System.out.println ("n="+n+ "**TIME="+(t2-t1)+"**cont="+cont);
-		 }  // for
+		int rep = Integer.parseInt(arg[0]);
+		
+		for (int n = 1; n <= 10000000; n *= 2) {
+			t1 = System.currentTimeMillis();
+			for(int i = 0; i < rep; i++) {
+				cont = rec1(n);
+				} // for
+			t2 = System.currentTimeMillis();
+			System.out.println("n=" + n + "**TIME=" + (t2 - t1) + "**cont=" + cont);
+		}	
 	} // main
 } //class
