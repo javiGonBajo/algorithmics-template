@@ -24,8 +24,9 @@ public class QuicksortInsertion {
 		int i = left;
 		int j = right - 1;
 		int pivot;
-		if (right - left > k) {
-			if (left < right){ //if there is one element it is not necessary
+		
+		if (left < right){ //if there is one element it is not necessary
+			if (right - left > k) {
 				int center = median_of_three(a, left, right);
 				//if there are less than or equal to 3 elements, there are just ordered
 				if ((right - left) >= 3){ 
@@ -45,23 +46,23 @@ public class QuicksortInsertion {
 					quicksortInsertion(a, i+1, right, k);
 				}
 			}
+			else {
+				insertion(a, left, right);
+			}
 		}
-		else {
-			insertion(a, left, right);
-		}
+		
 		
 	}
 	
 	public static void insertion(int[] a, int left, int right) {
 		int j;
 		int pivot;
-		int n = right - left;
 		
-		for (int i =  1; i < n; i++) {
+		for (int i =  left + 1; i < right; i++) {
 			pivot = a[i];
 			j = i-1;
 			
-			while (j >= 0 && pivot < a[j]) {
+			while (j >= left && pivot < a[j]) {
 				a[j+1] = a[j];
 				j--;
 			}
