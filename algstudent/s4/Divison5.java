@@ -28,7 +28,7 @@ public class Divison5 {
 		long t1,t2,cont = 0;
 		int rep = Integer.parseInt(arg[0]);
 		
-		for (int n = 1; n <= 10000000; n *= 2) {
+		for (int n = 1000; n <= 10000000; n *= 2) {
 			t1 = System.currentTimeMillis();
 			for(int i = 0; i < rep; i++) {
 				cont = rec5(n);
