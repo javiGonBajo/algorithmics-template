@@ -14,6 +14,11 @@ public class Calendar {
 		table = new String[participants.length][participants.length];
 	}
 	
+	public Calendar(int n) {
+		participants = new String[n];
+		table = new String[n][n];
+	}
+	
 	public static void main(String[] arg) {
 		Calendar c = new Calendar(arg[0]);
 		c.makeTable();
@@ -50,18 +55,24 @@ public class Calendar {
 	}
 	
 	private void printCalendar() {
+		System.out.print("PLAYER/OPPONENT\t");
+		for(int i=1;i<participants.length;i++)
+			System.out.print("\t" + "DAY " + i + "\t");
+		System.out.println();
 		for(int i = 0; i<table.length;i++) {
 			for(int j = 0; j<table.length;j++) {
-				System.out.print(table[i][j] + "\t");
+				System.out.print("\t" + table[i][j] + "\t");
 			}
 			System.out.println();
 		}
 	}
 	
-	private void makeTable() {
+	public void makeTable() {
 		table = makeTable(0, participants.length-1);
 	}
 	
+	//O(n^2)
+	// a = 2, b = 2, k = 2
 	private String[][] makeTable(int first, int last) {
 		int mid = (last-first)/2;
 		String[][] aux = new String[last-first+1][last-first+1];
