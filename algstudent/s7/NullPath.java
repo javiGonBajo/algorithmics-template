@@ -1,4 +1,4 @@
-package algstudent.s6;
+package s7;
 
 import java.util.LinkedList;
 import java.util.Random;
@@ -42,48 +42,42 @@ public class NullPath {
 
 	private void CalculateNullPath(boolean print) {
 		result.add(0);
-		found = auxiliarMethod(1);
-		if(!found && print) {
-			 System.out.println("There is no solution");
-		}
-		else {
-			result.add(weights.length-1);
-			printPath();
+		LinkedList<Integer> l = new LinkedList<Integer>();
+		found = auxiliarMethod(l);
+		if(print) {
+			if(!found) {
+				 System.out.println("There is no solution");
+			}
+			else {
+				result.add(weights.length-1);
+				printPath();
+			}
+			
+			printMatrix();
 		}
 		
-		printMatrix();
 		
 	}
 	
-	private boolean auxiliarMethod(int current) {
+	private boolean auxiliarMethod(LinkedList<Integer> usedNodes) {
 		if(checkResult())
 			return true;
 		
-		int counter = 0;
-		int node;
-		int rep = 0;
-		while(!found && counter < weights.length - 2 && result.size() < weights.length) {
-			do {
-				node = (current + counter + rep++)%(weights.length - 2);
-			} while(result.contains(node) && result.size()!=weights.length-1);
-			
-			
-			if(result.size() < weights.length-1) {
+		for(int node = 1; node<weights.length-1;node++) {		
+			if(usedNodes.size())
+			if(!usedNodes.contains(node)) {
 				result.add(node);
-				found = auxiliarMethod((node + 1)%(weights.length - 1));
-				if(!found)
+				usedNodes.add(node);
+				found = auxiliarMethod(usedNodes);
+				if(!found) {
+					usedNodes.removeLast();
 					result.removeLast();
-					counter++;
+				}
+				else
+					break;
 			}
 			
-			else {
-				if(!found ) {
-					result.removeLast();
-					return false;
-				}
-			}
 		}		
-		
 		return found;
 	}
 	
@@ -92,11 +86,11 @@ public class NullPath {
 			return false;
 		
 		int value = 0;
-		for(int i = 1; i<result.size() - 3; i++) {
+		for(int i = 0; i<result.size() - 1; i++) {
 			value += weights[result.get(i)][result.get(i+1)];
 		}
-		value += weights[result.getFirst()][weights.length-1];
 		value += weights[result.getLast()][weights.length-1];
+		System.out.println(value);
 		return value <= 99 && value >= -99;
 	}
 	
