@@ -7,7 +7,7 @@ public class NullPathTimes {
 		for (int n = 20; n <= 1000000000; n += 5) {
 			t1 = System.currentTimeMillis();
 			
-			for (int i = 0; i < 100; i++) {
+			for (int i = 0; i < 100; i+=1) {
 				np.newNullPath(n, false);
 			}
 

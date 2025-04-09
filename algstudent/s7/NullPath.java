@@ -43,8 +43,9 @@ public class NullPath {
 
 	private void CalculateNullPath(boolean print) {
 		result.add(0);
-		LinkedList<Integer> l = new LinkedList<Integer>();
-		found = auxiliarMethod(l);
+		found = auxiliarMethod();
+		value += weights[result.getLast()][weights.length-1];
+		
 		if(print) {
 			if(!found) {
 				 System.out.println("There is no solution");
@@ -61,19 +62,20 @@ public class NullPath {
 		
 	}
 	
-	private boolean auxiliarMethod(LinkedList<Integer> usedNodes) {
+	private boolean auxiliarMethod() {
 		if(checkResult())
 			return true;
 		
 		for(int node = 1; node<weights.length-1;node++) {		
-			if(usedNodes.size() == weights.length - 1)
+			if(result.size() == weights.length - 1)
 				break;
-			if(!usedNodes.contains(node)) {
+			if(!result.contains(node)) {
+				int last = result.getLast();
 				result.add(node);
-				usedNodes.add(node);
-				found = auxiliarMethod(usedNodes);
+				value += weights[last][node];
+				found = auxiliarMethod();
 				if(!found) {
-					usedNodes.removeLast();
+					value -= weights[last][node];
 					result.removeLast();
 				}
 				else
@@ -87,12 +89,8 @@ public class NullPath {
 	private boolean checkResult() {
 		if(result.size() < weights.length - 1)
 			return false;
-		value = 0;
-		for(int i = 0; i<result.size() - 1; i++) {
-			value += weights[result.get(i)][result.get(i+1)];
-		}
-		value += weights[result.getLast()][weights.length-1];
-		return value <= 99 && value >= -99;
+		
+		return Math.abs(value + weights[result.getLast()][weights.length-1]) <= 99;
 	}
 	
 	private void printMatrix() {
