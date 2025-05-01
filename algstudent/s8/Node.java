@@ -1,7 +1,7 @@
-package s8;
+package algstudent.s8;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Objects;
 
 public class Node implements Comparable<Node> {
     protected int depth; //Number of moves made so far (is equal to the number of nodes developed) on this branch
@@ -46,6 +46,10 @@ public class Node implements Comparable<Node> {
     	return parentID;
     }
     
+    public void setParentID(int pID) {
+    	parentID = pID; 
+    }
+    
     /**
      * Gets the ID of the node
      * @return ID of the node
@@ -60,8 +64,8 @@ public class Node implements Comparable<Node> {
      * do not prune anything
      * @return Value of the initial prune limit 
      */
-	public int initialValuePruneLimit(int size, int threshold) {
-		return size * threshold; //Implementation by default
+	public int pruneLimit(int n, int threshold) {
+		return n * threshold; //Implementation by default
 	}
     
 	@Override
@@ -69,26 +73,56 @@ public class Node implements Comparable<Node> {
 		int totalValue = Math.abs(heuristicValue);
 		int totalValueToBeCompared = Math.abs(node.getHeuristicValue());
 		
-		if (totalValue > totalValueToBeCompared) return 1; //this has less priority (is bigger)
-		else if (totalValue == totalValueToBeCompared) return 0; //The same priority
-		else return -1; //this has more priority (is smaller)
+		if(depth > node.depth)
+			return -1;
+		else if(depth < node.depth)
+			return 1;
+		else {
+			if (totalValue > totalValueToBeCompared) return 1; //this has less priority (is bigger)
+			else if (totalValue == totalValueToBeCompared) return 0; //The same priority
+			else return -1; //this has more priority (is smaller)
+		}
 	}
     
 	
 	
-	public ArrayList<Node> expand(HashMap usedNodes, ArrayList<Node> nodeList){
+	public ArrayList<Node> expand(Heap ds, ArrayList<Node> nodeList, int[][] weights){
 		ArrayList<Node> expandedList = new ArrayList<Node>();
-		for(Node node: nodeList) {
-			if(!usedNodes.containsValue(node))
+		for(int i = 0; i<nodeList.size();i++) {
+			Node node = new Node(i);
+			if(!ds.contains(this, node, depth + 1) && !node.equals(nodeList.get(nodeList.size()-1))) {
+				node.setParentID(getID());
+				node.heuristicValue = this.getHeuristicValue() + weights[this.getID()][node.getID()];
+				node.depth = depth + 1;
 				expandedList.add(node);	
+			}
 		}
 		return expandedList;
 	}
 	
-	public boolean isSolution(int max, int value, int threshold) {
-		if(this.getDepth() + 1 < max)
+	@Override
+	public int hashCode() {
+		return Objects.hash(ID, depth, heuristicValue, parentID);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
 			return false;
-		
-		return value <= threshold;
+		if (getClass() != obj.getClass())
+			return false;
+		Node other = (Node) obj;
+		return ID == other.ID;
+	}
+
+	public boolean isSolution(int max) {
+		return this.getDepth() + 2 == max;
+	}
+	
+	@Override
+	public String toString() {
+		return String.valueOf(getID());
 	}
 }

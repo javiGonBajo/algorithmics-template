@@ -1,19 +1,18 @@
-package s8;
+package algstudent.s8;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.Collections;
 import java.util.Random;
 
 public class NullPath {
 	private int[][] weights;
-	private LinkedList<Integer> result;
+	private ArrayList<Node> result;
 	private ArrayList<Node> nodeList = new ArrayList<Node>();
 	private boolean found;
-	private int value = 0;
 	private Heap ds = new Heap();
 	private int threshold = 99;
-	Node bestNode;
 	int pruneLimit;
+	Node lastNode;
 	
 	public NullPath(int n) {
 		newNullPath(n, true);
@@ -28,12 +27,13 @@ public class NullPath {
 	}
 	
 	private void printPath() {
+		Collections.reverse(result);
 		System.out.println(result);
 	}
 
 	public void newNullPath(int n, boolean print) {
 		weights = new int[n][n];
-		result = new LinkedList<Integer>();
+		result = new ArrayList<Node>();
 		found = false;
 		Random p = new Random();
 		for (int i = 0; i < weights.length; i++) {
@@ -44,84 +44,64 @@ public class NullPath {
 			}
 			nodeList.add(new Node(i));
 		}
-		
 		CalculateNullPath(print);
 	}
 
 	private void CalculateNullPath(boolean print) {
 		found = branchAndBound(nodeList.get(0));
-		value += weights[result.getLast()][weights.length-1];
+		result = ds.extractUsedNodesFrom(nodeList.get(weights.length-1));
 		
 		if(print) {
+			printMatrix();
+			
 			if(!found) {
 				 System.out.println("There is no solution");
+				
 			}
 			else {
-				result.add(weights.length-1);
 				printPath();
+				System.out.println("Total weight = " + pruneLimit);
 			}
-			
-			printMatrix();
-			System.out.println("Total weight = " + value);
 		}
 		
 		
 	}
 	
-//	private boolean auxiliarMethod() {
-//		if(checkResult())
-//			return true;
-//		
-//		for(int node = 1; node<weights.length-1;node++) {		
-//			if(result.size() == weights.length - 1)
-//				break;
-//			if(!result.contains(node)) {
-//				int last = result.getLast();
-//				result.add(node);
-//				value += weights[last][node];
-//				found = auxiliarMethod();
-//				if(!found) {
-//					value -= weights[last][node];
-//					result.removeLast();
-//				}
-//				else
-//					break;
-//			}
-//			
-//		}		
-//		return found;
-//	}
-	
 	public boolean branchAndBound(Node rootNode) {
-		ds.insert(rootNode); //first node to be explored
-		pruneLimit = rootNode.initialValuePruneLimit(nodeList.size() - 1, threshold);
-		while (!ds.empty() && ds.estimateBest() < pruneLimit) {
+		ds.insert(rootNode);
+		pruneLimit = Integer.MAX_VALUE;
+		while (!ds.empty()) {
+			if(!(ds.estimateBest() < pruneLimit)) {
+				ds.extractBestNode();
+				continue;
+			}
 			Node node = ds.extractBestNode();
-			ArrayList<Node> children = node.expand();
+			pruneLimit = node.pruneLimit(nodeList.size() - node.depth - 2, threshold);
+			ArrayList<Node> children = node.expand(ds, nodeList, weights);
 			for (Node child : children) {
-				if (child.isSolution(nodeList.size(), value, threshold)) {
-					int cost = child.getHeuristicValue();
-					if (cost < pruneLimit) {
+				if (child.isSolution(nodeList.size())) {
+					int cost =  Math.abs(child.getHeuristicValue() + weights[child.getID()][nodeList.get(nodeList.size()-1).getID()]);
+					if (cost <pruneLimit) {
 						pruneLimit = cost;
-						bestNode = child;
+						nodeList.get(nodeList.size()-1).parentID = child.getID();
 						found = true;
+						lastNode = child;
 					}
 				}
 				else {
-					if (child.getHeuristicValue() < pruneLimit)
+					if (child.getHeuristicValue() < pruneLimit) {
 						ds.insert(child);
+					}
 				}
 			}
-		} //while
+			if(found) {
+				ds.addUsedNode(lastNode);
+				return true;
+			}
+		}
 		return found;
 	}
 
-	private boolean checkResult() {
-		
-		
-		return Math.abs(value + weights[result.getLast()][weights.length-1]) <= 99;
-	}
-	
 	private void printMatrix() {
 		int n = weights.length;
 		for (int i = 0; i < n; i++) {

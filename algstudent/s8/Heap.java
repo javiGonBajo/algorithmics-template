@@ -1,4 +1,4 @@
-package s8;
+package algstudent.s8;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,18 +28,10 @@ public class Heap {
 	 * @param node Node to be inserted
 	 */
 	public void insert(Node node) {
-        if (!nodeRepeated(node)) { //To not repeat used nodes and avoid infinite loops (e.g., in the puzzle problem)
+        //if (!nodeRepeated(node)) { //To not repeat used nodes and avoid infinite loops (e.g., in the puzzle problem)
             nodes.add(node);
-        }
+        //}
 	}
-
-    private boolean nodeRepeated(Node node) {
-        for (Node n : usedNodes.values()) {
-        	if (node.equals(n))
-        		return true;
-        }
-        return false;
-    }
 	
     /**
      * Checks whether the priority queue is empty
@@ -86,6 +78,18 @@ public class Heap {
         }
               
 		return result;
+	}
+	
+	public boolean contains(Node father, Node node, int depth) {
+		if(usedNodes.containsValue(node)) {
+			ArrayList<Node> l = extractUsedNodesFrom(father);
+			return l.contains(node);
+		}
+		return false;
+	}
+	
+	public void addUsedNode(Node node) {
+		usedNodes.put(node.getID(), node);
 	}
 }
 

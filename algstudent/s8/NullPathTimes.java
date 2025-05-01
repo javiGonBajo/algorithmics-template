@@ -1,4 +1,4 @@
-package s8;
+package algstudent.s8;
 
 public class NullPathTimes {
 	public static void main(String[] args) {
