@@ -7,7 +7,7 @@ import java.util.Random;
 public class NullPath {
 	private int[][] weights;
 	private ArrayList<Node> result;
-	private ArrayList<Node> nodeList = new ArrayList<Node>();
+	private ArrayList<Node> nodeList;
 	private boolean found;
 	private Heap ds = new Heap();
 	private int threshold = 99;
@@ -35,6 +35,7 @@ public class NullPath {
 		weights = new int[n][n];
 		result = new ArrayList<Node>();
 		found = false;
+		nodeList = new ArrayList<Node>();
 		Random p = new Random();
 		for (int i = 0; i < weights.length; i++) {
 			for (int j = 0; j < weights.length; j++) {
