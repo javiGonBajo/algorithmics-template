@@ -8,6 +8,8 @@ public class NullPath {
 	private LinkedList<Integer> result;
 	private boolean found;
 	private int value = 0;
+	private int limit;
+	private int threshold = 99;
 	
 	public NullPath(int n) {
 		newNullPath(n, true);
@@ -66,8 +68,9 @@ public class NullPath {
 		if(checkResult())
 			return true;
 		
+		limit = (weights.length - result.size())* 99;
 		for(int node = 1; node<weights.length-1;node++) {		
-			if(result.size() == weights.length - 1)
+			if(result.size() == weights.length - 1 || value >= limit)
 				break;
 			if(!result.contains(node)) {
 				int last = result.getLast();
@@ -90,7 +93,7 @@ public class NullPath {
 		if(result.size() < weights.length - 1)
 			return false;
 		
-		return Math.abs(value + weights[result.getLast()][weights.length-1]) <= 99;
+		return Math.abs(value + weights[result.getLast()][weights.length-1]) <= threshold;
 	}
 	
 	private void printMatrix() {
