@@ -1,4 +1,4 @@
-package labs.en._25.algstudent.s5;
+package algstudent.s5;
 
 //MINIMUM PATHS IN A GRAPH BY FLOYD-WARSHALL
 //IT IS A SOLUTION BY DYNAMIC PROGRAMMING
@@ -44,8 +44,7 @@ public class MinimumPathsExample {
 					if (costs[source][target] < 10000000)
 						System.out.println("MINIMUM COST=" + costs[source][target]);
 					System.out.println("**************");
-				}
-
+			}
 	}
 
 	private static void pInitialize() {
@@ -95,7 +94,7 @@ public class MinimumPathsExample {
 		int pivot = p[source][target];
 		if(pivot == -1)
 			return "";
-		return path(source, pivot)+ "-->" + "NODE" + pivot;
+		return path(source, pivot)+ "-->" + "NODE" + pivot + path(pivot, target);
 	}
 
 	/* load the example cost matrix */

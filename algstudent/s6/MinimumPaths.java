@@ -1,4 +1,4 @@
-package labs.en._25.algstudent.s5;
+package algstudent.s5;
 
 import java.util.Random;
 
@@ -22,9 +22,9 @@ public class MinimumPaths {
 		p = new int[n][n];
 
 		pInitialize();
-		
 		fillInRandomWeights();
 		floyd();
+		
 		for (int source = 0; source <= weights.length - 1; source++)
 			for (int target = 0; target <= weights.length - 1; target++)
 				if (source != target)
@@ -104,19 +104,19 @@ public class MinimumPaths {
 	}
 
 	static String minimumPath(int source, int target) {
-		if (costs[source][target] == 10000000)
+		if(costs[source][target] == 10000000)
 			return "THERE IS NO PATH";
-		return v[source] + path(source, target) + "-->" + v[target];
+		return "NODE" + source+ path(source, target) + "-->" + "NODE" + target;
 	}
 
 	/* IT IS RECURSIVE and WORST CASE is O(n), IT IS O(n) if you write all nodes */
 	static String path(int source, int target) {
-		if (source == target)
+		if(source == target)
 			return "";
 		int pivot = p[source][target];
-		if (pivot == -1)
+		if(pivot == -1)
 			return "";
-		return path(source, pivot) + "-->" + v[pivot];
+		return path(source, pivot)+ "-->" + "NODE" + pivot + path(pivot, target);
 	}
 
 	/* load the example cost matrix */
@@ -128,6 +128,7 @@ public class MinimumPaths {
 					weights[i][j] = 0;
 			}
 		}
+		
 		weights[0][1] = 19;
 		weights[0][2] = 10;
 		weights[1][2] = 20;
